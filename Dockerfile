@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine
+FROM golang:1.21-alpine AS builder
 
 RUN apk add --no-cache gcc g++ make curl git
 
