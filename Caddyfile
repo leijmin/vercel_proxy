@@ -1,12 +1,23 @@
 render.openaishop.top {
     tls leijmin@gmail.com
-    route {
+
+    # 定义路由规则
+    @proxy path_not /naiveproxy/*
+    handle @proxy {
+        # Forward Proxy 配置
         forward_proxy {
             basic_auth leijmin 774256119a
             hide_ip
             hide_via
             probe_resistance secret-path
         }
-        reverse_proxy /naiveproxy 127.0.0.1:8080
+
+        # 对非 /naiveproxy 路径的请求，返回 200 OK
+        respond "Caddy Forward Proxy is running." 200
+    }
+
+    # Reverse Proxy 配置
+    handle /naiveproxy/* {
+        reverse_proxy 127.0.0.1:8080
     }
 }
