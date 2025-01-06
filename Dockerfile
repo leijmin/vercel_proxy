@@ -1,22 +1,16 @@
-FROM golang:1.21-alpine AS builder
+# 使用基础镜像
+FROM alpine:latest
 
-RUN apk add --no-cache gcc g++ make curl git
+# 安装运行时依赖
+RUN apk add --no-cache ca-certificates
 
-# 将 xcaddy 文件复制到镜像中
-COPY xcaddy /usr/bin/xcaddy
+# 复制本地构建的 caddy 文件到镜像中
+COPY caddy /usr/bin/caddy
 
-# 添加执行权限
-RUN chmod +x /usr/bin/xcaddy
+# 设置执行权限
+RUN chmod +x /usr/bin/caddy
 
-# 使用 xcaddy 编译带 http.forwardproxy 插件的 Caddy
-RUN /usr/bin/xcaddy build --with github.com/caddyserver/forwardproxy && \
-    mv caddy /usr/bin/caddy && \
-    chmod +x /usr/bin/caddy
-
-# 验证 Caddy 是否安装成功
-RUN caddy version
-
-# 配置文件
+# 复制配置文件
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY naiveproxy-config.json /etc/naiveproxy/naiveproxy-config.json
 
@@ -24,5 +18,5 @@ COPY naiveproxy-config.json /etc/naiveproxy/naiveproxy-config.json
 EXPOSE 80
 EXPOSE 443
 
-# 启动命令
-CMD ["sh", "-c", "caddy run --config /etc/caddy/Caddyfile"]
+# 启动 Caddy
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
