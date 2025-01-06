@@ -1,22 +1,16 @@
-:443, render.openaishop.top {
+:443, openaishop.top {
+    encode gzip
     tls leijmin@gmail.com
-
     route {
-        # Reverse Proxy 配置，处理 /naiveproxy/* 路径
-        @naiveproxy path /naiveproxy/*
-        handle @naiveproxy {
-            reverse_proxy 127.0.0.1:10808
-        }
-
-        # Forward Proxy 配置，处理其他所有路径
         forward_proxy {
             basic_auth leijmin 774256119a
             hide_ip
             hide_via
-            probe_resistance secret-path
+            probe_resistance
         }
 
         # 对非代理请求返回 200 OK，避免重定向循环
         respond "Caddy Forward Proxy is running." 200
+
     }
 }
