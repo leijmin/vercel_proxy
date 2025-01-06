@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 安装 xcaddy 工具
-RUN curl -fsSL https://github.com/caddyserver/xcaddy/releases/latest/download/xcaddy_0.3.1_linux_amd64.tar.gz | tar -xz -C /usr/bin
+RUN cp xcaddy /usr/bin
 
 # 使用 xcaddy 编译带 http.forwardproxy 插件的 Caddy
 RUN xcaddy build --with github.com/caddyserver/forwardproxy && \
