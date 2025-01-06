@@ -6,12 +6,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # 更新系统并安装必要工具
 RUN apt-get update && apt-get install -y \
-    curl git gcc g++ cmake make libssl-dev build-essential ca-certificates && \
+    curl git gcc g++ cmake make libssl-dev build-essential ca-certificates wget unzip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# 安装带有 naiveproxy 插件的 Caddy
-RUN curl -fsSL https://caddyserver.com/api/download?os=linux&arch=amd64&idempotency=1&plugins=http.forwardproxy \
-    -o /usr/bin/caddy && \
+# 安装 xcaddy 工具
+RUN curl -fsSL https://github.com/caddyserver/xcaddy/releases/latest/download/xcaddy_0.3.1_linux_amd64.tar.gz | tar -xz -C /usr/bin
+
+# 使用 xcaddy 编译带 http.forwardproxy 插件的 Caddy
+RUN xcaddy build --with github.com/caddyserver/forwardproxy && \
+    mv caddy /usr/bin/caddy && \
     chmod +x /usr/bin/caddy
 
 # 验证 Caddy 是否安装成功
