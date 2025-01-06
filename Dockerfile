@@ -1,18 +1,17 @@
 # 使用基础镜像
-FROM alpine:latest
+FROM debian:bullseye-slim
 
 # 安装运行时依赖
-RUN apk add --no-cache ca-certificates curl tar
-
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # 复制本地构建的 caddy 文件到镜像中
 COPY caddy /usr/bin/caddy
 COPY naiveproxy /usr/bin/naiveproxy
 
-# 设置 caddy 的执行权限
+# 设置执行权限
 RUN chmod +x /usr/bin/caddy
 RUN chmod +x /usr/bin/naiveproxy
-
 
 # 复制配置文件
 COPY Caddyfile /etc/caddy/Caddyfile
