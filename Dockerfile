@@ -1,13 +1,10 @@
-# 继承预先构建好的基础镜像
-FROM leijmin/debian-tools:latest
+# 使用官方 Go 镜像作为基础镜像
+FROM golang:1.20
 
-# 设置环境变量以避免交互式安装问题
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PATH="/usr/local/go/bin:${PATH}"
-
-# 安装 Go 编译器
-RUN curl -fsSL https://golang.org/dl/go1.20.6.linux-amd64.tar.gz | tar -C /usr/local -xz && \
-    go version
+# 安装必要的工具
+RUN apt-get update && apt-get install -y \
+    curl git gcc g++ cmake make libssl-dev build-essential ca-certificates wget unzip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 将 xcaddy 文件复制到镜像中
 COPY xcaddy /usr/bin/xcaddy
@@ -34,16 +31,16 @@ RUN cd /app/naiveproxy/src && \
     mv out/Release/naive /usr/bin/naive && \
     cd ../../ && rm -rf /app/naiveproxy
 
-# 将配置文件复制到镜像中
+# 配置文件
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY naiveproxy-config.json /etc/naiveproxy/naiveproxy-config.json
 
-# 暴露必要端口
+# 暴露端口
 EXPOSE 80
 EXPOSE 443
 
-# 健壮性优化：确保启动失败时自动退出
+# 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost || exit 1
 
-# 启动 Caddy 和 NaiveProxy
+# 启动命令
 CMD ["sh", "-c", "caddy run --config /etc/caddy/Caddyfile & naive --config /etc/naiveproxy/naiveproxy-config.json"]
