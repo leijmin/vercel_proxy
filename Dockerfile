@@ -9,11 +9,14 @@ RUN apt-get update && apt-get install -y \
     curl git gcc g++ cmake make libssl-dev build-essential ca-certificates wget unzip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# 安装 xcaddy 工具
-RUN cp xcaddy /usr/bin
+# 将 xcaddy 文件复制到镜像中
+COPY xcaddy /usr/bin/xcaddy
+
+# 添加执行权限
+RUN chmod +x /usr/bin/xcaddy
 
 # 使用 xcaddy 编译带 http.forwardproxy 插件的 Caddy
-RUN xcaddy build --with github.com/caddyserver/forwardproxy && \
+RUN /usr/bin/xcaddy build --with github.com/caddyserver/forwardproxy && \
     mv caddy /usr/bin/caddy && \
     chmod +x /usr/bin/caddy
 
