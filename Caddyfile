@@ -1,14 +1,14 @@
 render.openaishop.top {
     tls leijmin@gmail.com
 
-    # Reverse Proxy 配置，处理 /naiveproxy/* 路径
-    @naiveproxy path /naiveproxy/*
-    handle @naiveproxy {
-        reverse_proxy 127.0.0.1:8080
-    }
+    route {
+        # Reverse Proxy 配置，处理 /naiveproxy/* 路径
+        @naiveproxy path /naiveproxy/*
+        handle @naiveproxy {
+            reverse_proxy 127.0.0.1:8080
+        }
 
-    # Forward Proxy 配置，处理其他所有路径
-    handle {
+        # Forward Proxy 配置，处理其他所有路径
         forward_proxy {
             basic_auth leijmin 774256119a
             hide_ip
