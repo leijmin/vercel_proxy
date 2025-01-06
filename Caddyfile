@@ -5,7 +5,7 @@ render.openaishop.top {
         # Reverse Proxy 配置，处理 /naiveproxy/* 路径
         @naiveproxy path /naiveproxy/*
         handle @naiveproxy {
-            reverse_proxy 127.0.0.1:8080
+            reverse_proxy 127.0.0.1:10808
         }
 
         # Forward Proxy 配置，处理其他所有路径
