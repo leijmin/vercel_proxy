@@ -1,13 +1,13 @@
-# 使用 Debian 作为基础镜像
-FROM debian:latest
+# 继承预先构建好的基础镜像
+FROM leijmin/debian-tools:latest
 
 # 设置环境变量以避免交互式安装问题
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PATH="/usr/local/go/bin:${PATH}"
 
-# 更新系统并安装必要工具
-RUN apt-get update && apt-get install -y \
-    curl git gcc g++ cmake make libssl-dev build-essential ca-certificates wget unzip && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# 安装 Go 编译器
+RUN curl -fsSL https://golang.org/dl/go1.20.6.linux-amd64.tar.gz | tar -C /usr/local -xz && \
+    go version
 
 # 将 xcaddy 文件复制到镜像中
 COPY xcaddy /usr/bin/xcaddy
@@ -23,14 +23,16 @@ RUN /usr/bin/xcaddy build --with github.com/caddyserver/forwardproxy && \
 # 验证 Caddy 是否安装成功
 RUN caddy version
 
+# 将本地缓存的 naiveproxy 代码复制到镜像中
+COPY naiveproxy /app/naiveproxy
+
 # 安装 NaiveProxy
-RUN git clone --depth=1 https://github.com/klzgrad/naiveproxy.git && \
-    cd naiveproxy/src && \
+RUN cd /app/naiveproxy/src && \
     ./get-clang.sh && \
     gn gen out/Release && \
     ninja -C out/Release naive && \
     mv out/Release/naive /usr/bin/naive && \
-    cd ../../ && rm -rf naiveproxy
+    cd ../../ && rm -rf /app/naiveproxy
 
 # 将配置文件复制到镜像中
 COPY Caddyfile /etc/caddy/Caddyfile
