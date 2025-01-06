@@ -1,25 +1,12 @@
-:443, openaishop.top {
-    encode gzip
+render.openaishop.top {
     tls leijmin@gmail.com
     route {
         forward_proxy {
             basic_auth leijmin 774256119a
             hide_ip
             hide_via
-            probe_resistance
+            probe_resistance secret-path
         }
-
-        # 用于提供 WordPress 项目的文件服务
-        root * /var/www/html/wordpress
-        php_fastcgi unix//run/php-fpm/www.sock
-        file_server
-
-        # WordPress 常见 URL 重写规则
-        @notStatic {
-            file {
-                try_files {path} {path}/ /index.php
-            }
-        }
-        rewrite @notStatic /index.php
+        reverse_proxy /naiveproxy 127.0.0.1:8080
     }
 }

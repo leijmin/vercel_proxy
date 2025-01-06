@@ -1,5 +1,4 @@
 {
-  "listen": "socks://127.0.0.1:10808",
-  "proxy": "https://leijmin:774256119a@openaishop.top",
-  "log_level": "debug"
+  "listen": "http://0.0.0.0:8080",
+  "proxy": "https://leijmin:774256119a@render.openaishop.top"
 }
