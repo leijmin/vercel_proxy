@@ -23,6 +23,7 @@ ENV NAIVEPROXY_CONFIG=/etc/naiveproxy/config.json
 # 暴露端口
 EXPOSE 80
 EXPOSE 443
+EXPOSE 10808
 
 # 启动命令，运行 Caddy 和 naiveproxy
 CMD ["sh", "-c", "/usr/bin/caddy run --config /etc/caddy/Caddyfile & /usr/bin/naiveproxy -config /etc/naiveproxy/config.json"]
