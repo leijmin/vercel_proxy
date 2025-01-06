@@ -2,21 +2,23 @@
 FROM alpine:latest
 
 # 安装运行时依赖
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates curl tar
+
 
 # 复制本地构建的 caddy 文件到镜像中
 COPY caddy /usr/bin/caddy
 COPY naiveproxy /usr/bin/naiveproxy
 
-# 设置执行权限
+# 设置 caddy 的执行权限
 RUN chmod +x /usr/bin/caddy
 RUN chmod +x /usr/bin/naiveproxy
+
 
 # 复制配置文件
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY config.json /etc/naiveproxy/config.json
 
-# 设置运行时环境变量（改为推荐的格式）
+# 设置运行时环境变量
 ENV NAIVEPROXY_CONFIG=/etc/naiveproxy/config.json
 
 # 暴露端口
@@ -24,4 +26,4 @@ EXPOSE 80
 EXPOSE 443
 
 # 启动命令，运行 Caddy 和 naiveproxy
-CMD ["sh", "-c", "/usr/bin/caddy run --config /etc/caddy/Caddyfile & naiveproxy -config /etc/naiveproxy/config.json"]
+CMD ["sh", "-c", "/usr/bin/caddy run --config /etc/caddy/Caddyfile & /usr/bin/naiveproxy -config /etc/naiveproxy/config.json"]
