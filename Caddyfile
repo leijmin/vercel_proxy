@@ -1,8 +1,10 @@
+{
+    email leijmin@gmail.com
+}
 :443, render.openaishop.top {
     encode gzip
     tls {
         ca https://acme-v02.api.letsencrypt.org/directory
-        email leijmin@gmail.com
     }
     route {
         forward_proxy {
