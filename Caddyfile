@@ -1,6 +1,9 @@
 :443, render.openaishop.top {
     encode gzip
-    tls leijmin@gmail.com
+    tls {
+        ca https://acme-v02.api.letsencrypt.org/directory
+        email leijmin@gmail.com
+    }
     route {
         forward_proxy {
             basic_auth leijmin 774256119a
@@ -8,9 +11,6 @@
             hide_via
             probe_resistance
         }
-
-        # 对非代理请求返回 200 OK，避免重定向循环
         respond "Caddy Forward Proxy is running." 200
-
     }
 }
