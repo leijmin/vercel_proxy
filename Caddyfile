@@ -12,6 +12,6 @@
             hide_via
             probe_resistance
         }
-        respond "Caddy Forward Proxy is running." 200
+        respond "Caddy Forward Proxy is running with local certificates." 200
     }
 }
