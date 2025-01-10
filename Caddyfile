@@ -4,9 +4,7 @@
 
 :443, proxy-worker.openaishop.top {
     encode gzip
-    tls {
-        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-    }
+    tls /etc/caddy/certs/fullchain.pem /etc/caddy/certs/privkey.pem  # 使用本地证书
     route {
         forward_proxy {
             basic_auth leijmin 774256119a
