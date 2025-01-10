@@ -1,6 +1,7 @@
 {
     email leijmin@gmail.com
 }
+
 :443, proxy-worker.openaishop.top {
     encode gzip
     tls {
