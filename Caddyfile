@@ -1,7 +1,7 @@
 {
     email leijmin@gmail.com
 }
-:443, render.openaishop.top {
+:443, proxy-worker.openaishop.top {
     encode gzip
     tls {
         ca https://acme-v02.api.letsencrypt.org/directory
